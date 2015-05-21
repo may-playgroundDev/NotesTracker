@@ -5,31 +5,31 @@
  */
 package chat;
 
+import custom.MyCustomSocketSession;
 import java.util.HashMap;
 import java.util.Map;
-import javax.websocket.Session;
 
 /**
  *
  * @author maytan
  */
 public class SocketTracker {
-    private static final Map<String, Session> socketConnections = new HashMap<> ();
+    private static final Map<String, MyCustomSocketSession> socketConnections = new HashMap<> ();
     
-    public static void socketCreated(Session session) {
-        socketConnections.put(session.getId(), session);
+    public static void socketCreated(MyCustomSocketSession session) {
+        socketConnections.put(session.getSocketSession().getId(), session);
     }
     
-    public static void socketDeleted(Session session) {
-        socketConnections.remove(session.getId());
+    public static void socketDeleted(MyCustomSocketSession session) {
+        socketConnections.remove(session.getSocketSession().getId());
     }
     
-    public static Session getSessionById(String id) {
-        Session session = socketConnections.get(id);
+    public static MyCustomSocketSession getSessionById(String id) {
+        MyCustomSocketSession session = socketConnections.get(id);
         return session;
     }
     
-    public static Map<String, Session> getAllSocketConnections() {
+    public static Map<String, MyCustomSocketSession> getAllSocketConnections() {
         return socketConnections;
     }
 }

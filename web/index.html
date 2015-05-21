@@ -4,21 +4,34 @@
         <title>World Wide Chatting</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" type="text/css" href="css/index.css">
     </head>
+    
     <body>
-       
-        <div>
-            <input type="text" id="messageinput"/>
+        <div id="connectSection" class="hidden">
+            <div>
+                <label>
+                    Name:
+                </label>
+                <input type="text" id="nameInput"/>
+                <button type="button" onclick="openSocket()" >Connect</button>
+            </div>
         </div>
-        <div>
-            <button type="button" onclick="openSocket();" >Open</button>
-            <button type="button" onclick="send();" >Send</button>
-            <button type="button" onclick="closeSocket();" >Close</button>
+        
+        <div id="messageSection" class="hidden">
+            <div>
+                <input type="text" id="messageinput"/>
+            </div>
+            <div>
+                <button type="button" onclick="send()" >Send</button>
+                <button type="button" onclick="closeSocket()" >Close</button>
+            </div>
+            <!-- Server responses get written here -->
+            <div id="messages"></div>
         </div>
-        <!-- Server responses get written here -->
-        <div id="messages"></div>
        
-        <!-- Script to utilise the WebSocket -->
+        <!-- Script to utilize the WebSocket -->
+        <script src="thirdPartyLib/jquery-1.11.3.min.js"></script>
         <script type="text/javascript">
                        
             var webSocket;
@@ -31,8 +44,13 @@
                     return;
                 }
                 // Create a new instance of the websocket
-                webSocket = new WebSocket("ws://192.168.3.251:8080/WebSocketSample/chatServer");
-                 
+                var name = document.getElementById("nameInput").value;
+                if(!name || name.trim().length === 0) {
+                    alert("Please enter a name to join");
+                } else {
+                    webSocket = new WebSocket("ws://192.168.3.251:8080/WebSocketSample/chatServer/"+name);
+                }
+                
                 /**
                  * Binds functions to the listeners for the websocket.
                  */
@@ -40,10 +58,13 @@
                     // For reasons I can't determine, onopen gets called twice
                     // and the first time event.data is undefined.
                     // Leave a comment if you know the answer.
+                    $("#connectSection").hide();
+                    $("#messageSection").show();
                     if(event.data === undefined)
                         return;
- 
+
                     writeResponse(event.data);
+                    
                 };
  
                 webSocket.onmessage = function(event){
@@ -70,8 +91,13 @@
             function writeResponse(text){
                 messages.innerHTML += "<br/>" + text;
             }
+            
+            $(document).ready(function() {
+                $("#connectSection").show();
+                $("#messageSection").hide();
+            });
            
         </script>
-       
+        
     </body>
 </html>
