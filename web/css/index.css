@@ -11,3 +11,13 @@ and open the template in the editor.
 .hidden {
     display: none;
 }
+
+label {
+    float: left;
+    vertical-align: text-top;
+    padding: 0 5px 0 5px;
+}
+
+#messageInput {
+    width: 80%;
+}

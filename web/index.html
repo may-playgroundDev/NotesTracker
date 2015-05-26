@@ -20,7 +20,8 @@
         
         <div id="messageSection" class="hidden">
             <div>
-                <input type="text" id="messageinput"/>
+                <label>Message: </label>
+                <input type="text" id="messageInput"/>
             </div>
             <div>
                 <button type="button" onclick="send()" >Send</button>
@@ -80,7 +81,7 @@
              * Sends the value of the text input to the server
              */
             function send(){
-                var text = document.getElementById("messageinput").value;
+                var text = document.getElementById("messageInput").value;
                 webSocket.send(text);
             }
            

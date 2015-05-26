@@ -21,7 +21,9 @@ import javax.websocket.server.PathParam;
  */
 @ServerEndpoint("/chatServer/{name}")
 public class ChatServer {
+    Logger logger = Logger.getLogger(ChatServer.class.getName());
     //currently local ip address to access this app on the same network
+    //ip address within internal network
     //http://192.168.3.251:8080/WebSocketSample/
     
     /**
@@ -34,14 +36,15 @@ public class ChatServer {
      */
     @OnOpen
     public void onOpen(@PathParam("name") String name, Session session) {
-        System.out.println(name + " has opened a connection at " + session.getId()); 
+        logger.log(Level.INFO, "{0} has opened a connection at {1}", new Object[]{name, session.getId()});
+        //System.out.println(name + " has opened a connection at " + session.getId()); 
         try {
             session.getBasicRemote().sendText("Connection Established");
             MyCustomSocketSession mySession = new MyCustomSocketSession(name, session);
             SocketTracker.socketCreated(mySession);
             broadcastMessageToAll("joined the chatroom", mySession);
         } catch (IOException ex) {
-            Logger.getLogger(ChatServer.class.getName()).log(Level.SEVERE, null, ex);
+            logger.log(Level.SEVERE, null, ex);
         }
     }
     
@@ -68,7 +71,7 @@ public class ChatServer {
                     try {
                         availableSession.getSocketSession().getBasicRemote().sendText(fromSession.getName() + ": " + message);
                     } catch (IOException ex) {
-                        Logger.getLogger(ChatServer.class.getName()).log(Level.SEVERE, null, ex);
+                        logger.log(Level.SEVERE, null, ex);
                     }
                 } else {
                     //removed dead session
@@ -76,4 +79,6 @@ public class ChatServer {
                 }
             }
     }
+    
+    
 }
